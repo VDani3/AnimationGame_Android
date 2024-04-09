@@ -27,7 +27,7 @@ public class Game extends ApplicationAdapter {
 	// A variable for tracking elapsed time for the animation
 	float stateTime;
 	boolean isWalking = false;
-	int dir = 1;
+	int dir = 1, dirv = 1;
 	float posx, posy;
 	Rectangle up, down, left, right;
 	final int IDLE=0, UP=1, DOWN=2, LEFT=3, RIGHT=4;
@@ -101,7 +101,7 @@ public class Game extends ApplicationAdapter {
 
 		// Get current frame of animation for the current stateTime
 		//Background
-		bgRegion.setRegion(posx,posy,camera.viewportWidth,camera.viewportHeight);
+		bgRegion.setRegion(posx,posy,camera.viewportWidth,camera.viewportHeight+posy);
 
 		//Animations
 		TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
@@ -112,15 +112,15 @@ public class Game extends ApplicationAdapter {
 		spriteBatch.begin();
 		spriteBatch.draw(bgRegion,0,0);
 
-		background.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.Repeat);
+		background.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
 		int touch = virtual_joystick_control();
 
 		//Moviment
 		if (touch != IDLE) {
 			isWalking = true;
-			posy += 0.001;
 			if (touch == UP) {
-				posy += 0.001;
+				dirv = 1;
+				posy -= 0.001;
 			} else if(touch == LEFT){
 				dir = -1;
 				posx -= 0.001;
@@ -128,7 +128,8 @@ public class Game extends ApplicationAdapter {
 				dir = 1;
 				posx += 0.001;
 			} else if (touch == DOWN) {
-				posy -= 0.001;
+				dirv = -1;
+				posy += 0.001;
 			}
 
 		} else {
